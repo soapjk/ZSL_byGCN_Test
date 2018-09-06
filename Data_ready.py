@@ -27,7 +27,8 @@ class TestDataset(Dataset):
     def __init__(self):
         self.images = np.load('test_data/test_images.npy')
         self.images = np.transpose(self.images, (0, 3, 1, 2))[0:1]
-
+        semantic_features = word_embeding_get()
+        self.semantic_features = semantic_features
     def __getitem__(self, index):
         image = self.images[index]
         return {'image': image}

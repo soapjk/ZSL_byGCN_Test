@@ -34,9 +34,9 @@ class Mymodel(nn.Module):
         super(Mymodel, self).__init__()
 
         self.MLP_layers = nn.Sequential(
-            GraphConvolution(300, 300, graph),
+            GraphConvolution(300, 256, graph),
             nn.LeakyReLU(),
-            GraphConvolution(300, 128, graph),
+            GraphConvolution(256, 128, graph),
             #nn.LeakyReLU(),
             #GraphConvolution(256, 128, graph),
             #nn.LeakyReLU(),

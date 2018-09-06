@@ -11,6 +11,12 @@ from utils import *
 import matplotlib.pyplot as plt
 
 
+def adjust_learning_rate(optimizer, lr):
+    """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
+    for param_group in optimizer.param_groups:
+        param_group['lr'] = lr
+
+
 class MyLoss(nn.Module):
     def __init__(self):
         super(MyLoss, self).__init__()
@@ -39,26 +45,27 @@ if __name__ == "__main__":
     model = Mymodel(graph=train_dataset.graph)
     model.cuda()
     loss_function = MyLoss()
-    optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=0.001)
+    optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=0.01)
 
     semantic = torch.from_numpy(train_dataset.semantic_features).float().cuda()
     classfier_weight = torch.from_numpy(train_dataset.classfierweight).float().cuda()
     classfier_weight = L2_Normalize(classfier_weight)
-
-    epochs = 30000
+    lr = 0.01
+    epochs = 25000
     loss_list = []
-    for i in range(300):
+    for i in range(epochs):
+        if i%500 ==0 and i>0:
+            lr = lr*0.991
+            adjust_learning_rate(optimizer,lr)
         model.train()
-        #for idx, batch_data in enumerate(train_dataloader):
         model.zero_grad()
-
         semantic_feature = model(semantic)
         loss = loss_function(semantic_feature, classfier_weight)
-        #print("",loss)
         loss.backward()
         optimizer.step()
         loss_list.append(float(loss))
-
+        print("finish epoch " + str(i) + ' current loss: ' + str(loss.data))
+    torch.save(model, 'gcn_zsl.pt')
     Test = plt.plot(loss_list, label='Train')
     plt.xlabel('Epochs')
     plt.ylabel('LOSS')
