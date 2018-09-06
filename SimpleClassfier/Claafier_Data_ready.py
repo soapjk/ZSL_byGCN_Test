@@ -5,10 +5,10 @@ from torch.utils.data import Dataset
 import numpy as np
 class ClassfierDataset(Dataset):
     def __init__(self):
-        images = np.load('images.npy')
+        images = np.load('../train_data/images.npy')
         images = np.transpose(images,(0,3,1,2))
-        labels = np.load('label_num.npy').astype(np.long)
-        labels_one_hot = np.load('labels_one_hot.npy')
+        labels = np.load('../train_data/label_num.npy').astype(np.long)
+        labels_one_hot = np.load('../train_data/labels_one_hot.npy')
         self.images = images
         self.labels = labels
         self.labels_one_hot = labels_one_hot
