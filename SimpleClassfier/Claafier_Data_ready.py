@@ -18,7 +18,6 @@ class ClassfierDataset(Dataset):
         image = self.images[index]
         label = self.labels[index]
         boop = {'image': image, 'label': label, 'labels_one_hot': self.labels_one_hot[index]}
-
         return boop
 
     def __len__(self):
