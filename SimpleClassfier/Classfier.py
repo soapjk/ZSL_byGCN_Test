@@ -58,7 +58,7 @@ if __name__ == '__main__':
     else:
         model = Classfier(128)
     model.cuda()
-    optimizer = optim.SGD(filter(lambda p: p.requires_grad, model.parameters()), lr=0.01)
+    optimizer = optim.Adagrad(filter(lambda p: p.requires_grad, model.parameters()), lr=0.01,weight_decay=0.0005)
     loss_func = ClassLoss()
     epochs = 500
 

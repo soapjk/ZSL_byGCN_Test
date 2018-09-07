@@ -1,10 +1,10 @@
-
+import torch
 import numpy as np
 import os
 import cv2
 import pickle
-train_path = '../../Data/DatasetA_train_20180813/'
-test_path = '../../Data/DatasetA_train_20180813/'
+train_path = '../Data/DatasetA_train_20180813/'
+test_path = '../Data/DatasetA_train_20180813/'
 path = ''
 
 
@@ -179,6 +179,19 @@ def word_embeding_get():
     return semantic_features
 
 
+def label_list_ready():
+    label_list_file = open(path + 'label_list.txt', 'r', encoding='utf-8')
+    label_list_lines = label_list_file.readlines()
+    label_list = []
+    for line in label_list_lines:
+        line = line[:-1].split('\t')
+        label_list.append(line[0])
+    label_list = np.array(label_list)
+    np.save('train_data/label_list.npy', label_list)
+    np.save('test_data/label_list.npy', label_list)
+    return label_list
+
+
 
 def data_ready(mode='train'):
     global path
@@ -195,4 +208,15 @@ def data_ready(mode='train'):
     graph = graph_ready()
 
     return images, graph, semantic_features, labels
+
+def extract_classfierweight():
+    model = torch.load('SimpleClassfier/classfier_model/classfier.pt')
+    model.cpu()
+    weight = model.weight.detach().numpy()
+    np.save('train_data/classfierweight.npy', weight)
+
+if __name__ == '__main__':
+    path = test_path
+    label_list_ready()
+    pass
 

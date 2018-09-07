@@ -1,10 +1,7 @@
-import sys
-sys.path.append('../')
 import torch
-import numpy as np
-from SimpleClassfier.Classfier import Classfier
-model = torch.load('../SimpleClassfier/classfier_model/classfier.pt')
-model.cpu()
-weight = model.weight.detach().numpy()
-np.save('../train_data/classfierweight.npy', weight)
-pass
+import torch.nn as nn
+x = nn.Parameter(torch.Tensor(2,3))
+nn.init.uniform_(x, -0.001, 0.001)
+print(x)
+x = x.view(1, -1)
+print(x)

@@ -1,4 +1,4 @@
-from GCNmodel import Mymodel
+from GCNmodel import Mymodel,GCN_JK
 import os
 import torch
 import torch.nn as nn
@@ -38,20 +38,22 @@ if __name__ == "__main__":
     test_dataset = TestDataset()
     test_dataloader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=1)
     myResnet = torch.load('./SimpleClassfier/classfier_model/classfier.pt').res
+    for p in myResnet.parameters():
+        p.requires_grad = False
     myResnet.cuda()
     myResnet.eval()
     word_label = np.load('train_data/word_labels.npy')
 
-    model = Mymodel(graph=train_dataset.graph)
+    model = GCN_JK(graph=train_dataset.graph)
     model.cuda()
     loss_function = MyLoss()
-    optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=0.01)
+    optimizer = optim.Adagrad(filter(lambda p: p.requires_grad, model.parameters()), lr=0.01)
 
     semantic = torch.from_numpy(train_dataset.semantic_features).float().cuda()
     classfier_weight = torch.from_numpy(train_dataset.classfierweight).float().cuda()
     classfier_weight = L2_Normalize(classfier_weight)
     lr = 0.01
-    epochs = 25000
+    epochs = 2500
     loss_list = []
     for i in range(epochs):
         if i%500 ==0 and i>0:
@@ -69,10 +71,6 @@ if __name__ == "__main__":
     Test = plt.plot(loss_list, label='Train')
     plt.xlabel('Epochs')
     plt.ylabel('LOSS')
-    """
-    for i in range(loss_list.__len__()):
-        plt.text(i, loss_list[i], str((i, round(loss_list[i], 3))), family='serif', style='italic', ha='right', wrap=True)
-    """
     plt.legend()
     plt.savefig("log_pics/loss.png")
     plt.clf()
