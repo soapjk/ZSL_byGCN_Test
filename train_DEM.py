@@ -30,12 +30,13 @@ if __name__ == "__main__":
     epochs = 2500
     loss_list = []
     for i in range(epochs):
+        model.train()
         for idx,batch_data in enumerate(train_dataloader):
+            """
             if i%500 ==0 and i>0:
                 lr = lr*0.991
                 adjust_learning_rate(optimizer,lr)
-            model.train()
-
+            """
             model.zero_grad()
             loss = model.get_loss()
             #loss.backward()
