@@ -1,7 +1,8 @@
 from Data_ready import TestDataset
 from torch.utils.data import DataLoader
 from utils import *
-
+import torch
+import numpy as np
 # 训练文件目录，原文件结构无需改动
 test_path = '../Data/DatasetA_test_20180813/DatasetA_test/'
 result_file = open('result/submit_spared.txt', 'a', encoding='utf-8')

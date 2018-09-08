@@ -15,7 +15,9 @@ def adjust_learning_rate(optimizer, lr):
 
 
 if __name__ == "__main__":
-    batch_size = 64
+    batch_size = 32
+    lr = 1e-4
+    epochs = 50
     train_dataset = ClassfierDataset('train_data/')
     train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=1)
     semantic = word_embeding_get()
@@ -25,10 +27,8 @@ if __name__ == "__main__":
 
     model = DEM(myResnet)
     model.cuda()
-    optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=1e-4, weight_decay=1e-8)
+    optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=lr, weight_decay=1e-8)
 
-    lr = 0.01
-    epochs = 50
     loss_list = []
     for i in range(epochs):
         count = 0.

@@ -3,6 +3,7 @@ sys.path.append('../')
 
 from torch.utils.data import Dataset
 import numpy as np
+
 class ClassfierDataset(Dataset):
     def __init__(self, path):
         images = np.load(path+'images.npy')
