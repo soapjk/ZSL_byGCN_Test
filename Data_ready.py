@@ -1,7 +1,6 @@
 from torch.utils.data import Dataset
-import numpy as np
-from prepare_data import data_ready
-from prepare_data import *
+from utils.prepare_data import *
+
 class MyDataset(Dataset):
     def __init__(self):
         graph = graph_ready()

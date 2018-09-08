@@ -1,12 +1,8 @@
-from GCNmodel import Mymodel,GCN_JK
-import os
-import torch
+from Mymodels.GCNmodel import GCN_JK
 import torch.nn as nn
 import torch.optim as optim
 from Data_ready import MyDataset,TestDataset
 from torch.utils.data import DataLoader
-import numpy as np
-from SimpleClassfier.Classfier import Classfier
 from utils import *
 import matplotlib.pyplot as plt
 

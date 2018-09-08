@@ -4,13 +4,13 @@ sys.path.append('../')
 from torch.utils.data import Dataset
 import numpy as np
 class ClassfierDataset(Dataset):
-    def __init__(self):
-        images = np.load('../train_data/images.npy')
-        images = np.transpose(images,(0,3,1,2))
-        labels = np.load('../train_data/label_num.npy').astype(np.long)
-        labels_one_hot = np.load('../train_data/labels_one_hot.npy')
-        self.images = images
-        self.labels = labels
+    def __init__(self, path):
+        images = np.load(path+'images.npy')
+        images = np.transpose(images, (0, 3, 1, 2))
+        labels = np.load(path+'label_num.npy').astype(np.long)
+        labels_one_hot = np.load(path+'labels_one_hot.npy')
+        self.images = images[0:30000]
+        self.labels = labels[0:30000]
         self.labels_one_hot = labels_one_hot
         pass
 

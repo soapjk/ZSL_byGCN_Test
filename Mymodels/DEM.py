@@ -9,19 +9,17 @@ class DEM(nn.Module):
         self.cnn = cnn
         for p in self.cnn.parameters():
             p.requires_grad = False
-        # 24
-        #visual_dim = cnn.classifier.in_features
         visual_dim = 128
         self.word_emb_transformer = nn.Sequential(*[
             nn.Linear(semantic_dim, hidden_dim),
-            nn.ReLU(),
+            nn.LeakyReLU(),
             nn.Linear(hidden_dim, visual_dim),
-            nn.ReLU(),
+            nn.LeakyReLU()
         ])
 
     def forward(self, image, label, word_embeddings):
         self.cnn.eval()
-        visual_emb, _ = self.cnn(image)
+        visual_emb = self.cnn(image)
         semantic_emb = self.word_emb_transformer(word_embeddings[label])
 
         return semantic_emb, visual_emb
@@ -37,7 +35,7 @@ class DEM(nn.Module):
             batch_size = image.size(0)
 
             self.cnn.eval()
-            visual_emb, _ = self.cnn(image)
+            visual_emb = self.cnn(image)
 
             visual_emb = visual_emb.repeat(1, n_class).view(batch_size * n_class, -1)
             semantic_emb = self.word_emb_transformer(word_embeddings).repeat(batch_size, 1)

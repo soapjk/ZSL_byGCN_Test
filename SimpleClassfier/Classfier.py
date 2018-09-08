@@ -9,7 +9,7 @@ from SimpleClassfier.CNN import CNN_M
 from torch.utils.data import DataLoader
 import time
 import os
-from utils import L2_Normalize
+from utils.utils import L2_Normalize
 
 class ClassLoss(nn.Module):
     def __init__(self):
@@ -35,22 +35,22 @@ class Classfier(nn.Module):
     def forward(self, x):
         x = self.res(x)
 
-        l2_number = torch.sqrt(torch.sum(torch.pow(self.weight, 2), 1))
-        l2_number = torch.unsqueeze(l2_number, 1)
-        one_vector = torch.ones([1, 128]).float().cuda()
-        maxtrix_l2 = torch.mm(l2_number, one_vector)
-        using_weight = self.weight/maxtrix_l2
+        #l2_number = torch.sqrt(torch.sum(torch.pow(self.weight, 2), 1))
+        #l2_number = torch.unsqueeze(l2_number, 1)
+        #one_vector = torch.ones([1, 128]).float().cuda()
+        #maxtrix_l2 = torch.mm(l2_number, one_vector)
+        #using_weight = self.weight/maxtrix_l2
 
-        #using_weight = self.weight
+        using_weight = self.weight
 
         x = torch.mm(x, torch.t(using_weight))
         return x
 
 
 if __name__ == '__main__':
-    batch_size = 1
-    model_path = './classfier_model/classfier.pt'
-    train_dataset = ClassfierDataset()
+    batch_size = 32
+    model_path = 'classfier_model/classfier_filtered_unNorm.pt'
+    train_dataset = ClassfierDataset('../data/train_data/')
     train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=1)
     if os.path.exists(model_path):
         model = torch.load(model_path)
@@ -58,9 +58,9 @@ if __name__ == '__main__':
     else:
         model = Classfier(128)
     model.cuda()
-    optimizer = optim.Adagrad(filter(lambda p: p.requires_grad, model.parameters()), lr=0.01,weight_decay=0.0005)
+    optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=1e-3, weight_decay=1e-4)
     loss_func = ClassLoss()
-    epochs = 500
+    epochs = 200
 
     min_loss = 999
     for i in range(epochs):

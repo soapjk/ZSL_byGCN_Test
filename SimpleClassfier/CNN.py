@@ -2,7 +2,7 @@ import sys
 sys.path.append('../')
 import torch.nn as nn
 import torch
-from utils import L2_Normalize
+from utils.utils import L2_Normalize
 from Data_ready import MyDataset
 from torch.utils.data import DataLoader
 import cv2

@@ -1,8 +1,8 @@
 import sys
 sys.path.append('../')
+
 import math
 import torchvision.models.resnet as resnet
-
 import torch
 import torch.nn as nn
 from Data_ready import MyDataset
@@ -68,13 +68,13 @@ class MyResNet(nn.Module):
         x = self.avgpool(x)
         x = x.view(x.size(0), -1)
         x = self.fc(x)
-
+        """
         l2_number = torch.sqrt(torch.sum(torch.pow(x, 2), 1))
         l2_number = torch.unsqueeze(l2_number, 1)
         one_vector = torch.ones([1,128]).float().cuda()
         maxtrix_l2 = torch.mm(l2_number, one_vector)
         x = x / maxtrix_l2
-
+        """
         return x
 
 
