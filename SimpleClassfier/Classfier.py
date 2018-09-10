@@ -49,14 +49,14 @@ class Classfier(nn.Module):
 
 if __name__ == '__main__':
     batch_size = 32
-    model_path = 'classfier_model/classfier_filtered_unNorm.pt'
+    model_path = 'classfier_model/classfier_unNorm_32.pt'
     train_dataset = ClassfierDataset('../data/train_data/')
     train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=1)
     if os.path.exists(model_path):
         model = torch.load(model_path)
         print("loaded pretrained model.")
     else:
-        model = Classfier(128)
+        model = Classfier(32)
     model.cuda()
     optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=1e-3, weight_decay=1e-4)
     loss_func = ClassLoss()

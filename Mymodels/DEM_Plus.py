@@ -9,7 +9,7 @@ class DEM_Plus(nn.Module):
         self.cnn = cnn
         for p in self.cnn.parameters():
             p.requires_grad = False
-        visual_dim = 128
+        visual_dim = 32
         self.word_emb_transformer = nn.Sequential(*[
             nn.Linear(semantic_dim, hidden_dim),
             nn.LeakyReLU(),

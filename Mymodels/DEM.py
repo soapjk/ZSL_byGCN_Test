@@ -9,20 +9,23 @@ class DEM(nn.Module):
         self.cnn = cnn
         for p in self.cnn.parameters():
             p.requires_grad = False
-        visual_dim = 128
+        visual_dim = 32
         self.word_emb_transformer = nn.Sequential(*[
-            nn.Linear(semantic_dim, hidden_dim),
+            nn.Linear(semantic_dim+30, hidden_dim),
             nn.LeakyReLU(),
-            nn.Linear(hidden_dim, visual_dim),
+            nn.Linear(hidden_dim, 32),
             nn.LeakyReLU()
         ])
 
-    def forward(self, image, label, word_embeddings):
+
+    def forward(self, image, label, word_embeddings, attribute):
         self.cnn.eval()
         visual_emb = self.cnn(image)
-        semantic_emb = self.word_emb_transformer(word_embeddings[label])
 
-        return semantic_emb, visual_emb
+        cat = torch.cat(word_embeddings[label], attribute[label])
+        cat = self.word_emb_transformer(cat)
+
+        return cat, visual_emb
 
     def get_loss(self, image, label, word_embeddings):
         loss = F.mse_loss(*self.forward(image, label, word_embeddings))

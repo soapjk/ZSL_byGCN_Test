@@ -10,8 +10,8 @@ class ClassfierDataset(Dataset):
         images = np.transpose(images, (0, 3, 1, 2))
         labels = np.load(path+'label_num.npy').astype(np.long)
         labels_one_hot = np.load(path+'labels_one_hot.npy')
-        self.images = images[0:30000]
-        self.labels = labels[0:30000]
+        self.images = images
+        self.labels = labels
         self.labels_one_hot = labels_one_hot
         pass
 

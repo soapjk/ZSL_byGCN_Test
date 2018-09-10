@@ -27,7 +27,7 @@ class MyResNet(nn.Module):
         self.avgpool = nn.AvgPool2d(2, stride=1)
         #self.avgpool = nn.AvgPool2d(7, stride=1)
 
-        self.fc = nn.Linear(512 * block.expansion, 128)
+        self.fc = nn.Linear(512 * block.expansion, 32)
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
