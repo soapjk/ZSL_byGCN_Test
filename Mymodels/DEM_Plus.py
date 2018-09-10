@@ -18,36 +18,38 @@ class DEM_Plus(nn.Module):
         ])
         self.MLP = nn.Sequential(*[
             nn.Linear(2*visual_dim, visual_dim),
+            nn.Dropout(),
             nn.LeakyReLU(),
             nn.Linear(visual_dim, visual_dim//2),
-            nn.LeakyReLU(),
-            nn.Linear(visual_dim, visual_dim//2),
+            nn.Dropout(),
             nn.LeakyReLU(),
             nn.Linear(visual_dim//2, visual_dim//2//2),
+            nn.Dropout(),
             nn.LeakyReLU()
         ])
         self.out = nn.Sequential(*[
             nn.Linear(visual_dim//2//2, 1),
-            nn.LeakyReLU()
+            nn.Sigmoid()
         ])
 
-    def forward(self, image, label, word_embeddings):
+    def forward(self, image, label,word_embeddings):
         n_class = word_embeddings.size(0)
         batch_size = image.size(0)
 
         self.cnn.eval()
         visual_emb = self.cnn(image)
 
-        visual_emb = visual_emb.repeat(1, n_class).view(batch_size * n_class, -1)
-        semantic_emb = self.word_emb_transformer(word_embeddings).repeat(batch_size, 1)
+        #visual_emb = visual_emb.repeat(1, n_class).view(batch_size * n_class, -1)
+        semantic_emb = self.word_emb_transformer(word_embeddings[label])
         concat = torch.cat([visual_emb, semantic_emb], -1)
         x = self.MLP(concat)
+        x = self.out(x)
         x = x.view(batch_size, -1)
         return x
 
     def get_loss(self, image, label, word_embeddings):
-        x = self.forward(image, label, word_embeddings)
-        loss = nn.CrossEntropyLoss()(x, label)
+        x = self.forward(image, label,word_embeddings)
+        loss = torch.sum(torch.abs(x-1))
         return loss
 
     def predict(self, image, word_embeddings):
@@ -60,10 +62,10 @@ class DEM_Plus(nn.Module):
 
             visual_emb = visual_emb.repeat(1, n_class).view(batch_size * n_class, -1)
             semantic_emb = self.word_emb_transformer(word_embeddings).repeat(batch_size, 1)
-
-            score = (visual_emb - semantic_emb).norm(dim=1).view(batch_size, n_class)
+            concat = torch.cat([visual_emb, semantic_emb], -1)
+            x = self.MLP(concat)
+            score = self.out(x)
             pred = score.min(1)[1]
-
         return pred.detach().cpu().numpy()
 
 

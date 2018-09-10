@@ -36,7 +36,7 @@ class TestDataset(Dataset):
         return self.images.shape[0]
 
 
-class DEMPlusDataset(Dataset):
+class DEMPlusTrainDataset(Dataset):
     def __init__(self, path):
         images = np.load(path+'images.npy')
         images = np.transpose(images, (0, 3, 1, 2))
@@ -44,12 +44,27 @@ class DEMPlusDataset(Dataset):
         labels_one_hot = np.load(path+'labels_one_hot.npy')
         self.images = images[0:30000]
         self.labels = labels[0:30000]
-        self.labels_one_hot = labels_one_hot
-        pass
+        self.labels_one_hot = labels_one_hot[0:30000]
 
     def __getitem__(self, index):
 
         boop = {'image': self.images[index], 'label': self.labels[index], 'labels_one_hot': self.labels_one_hot[index]}
+        return boop
+
+    def __len__(self):
+        return len(self.images)
+
+
+class DEMPlusEvalDataset(Dataset):
+    def __init__(self):
+        images = np.load('data/eval_data/eval_image_list.npy')
+        images = np.transpose(images, (0, 3, 1, 2))
+        labels = np.load('data/eval_data/eval_label_list.npy')
+        self.images = images
+        self.labels = labels
+
+    def __getitem__(self, index):
+        boop = {'image': self.images[index], 'label': self.labels[index]}
         return boop
 
     def __len__(self):

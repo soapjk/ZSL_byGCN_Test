@@ -13,7 +13,7 @@ def init():
 
 
 def attribute_label():
-    if not os.path.exists('train_data/attributes.npy') or not os.path.exists('train_data/word_labels.npy'):
+    if not os.path.exists('data/train_data/attributes.npy') or not os.path.exists('data/train_data/word_labels.npy'):
         file_attribute = open(path + 'attributes_per_class.txt', 'r', encoding='utf-8')
         attribute_lines = file_attribute.readlines()
         word_label_list = []
@@ -27,11 +27,11 @@ def attribute_label():
 
         word_labels = np.array(word_label_list)
         attributes = np.array(attribute_list)
-        np.save('./train_data/word_labels.npy', word_labels)
-        np.save('./train_data/attributes.npy', attributes)
+        np.save('data/train_data/word_labels.npy', word_labels)
+        np.save('data/train_data/attributes.npy', attributes)
     else:
-        word_labels = np.load('train_data/word_labels.npy')
-        attributes = np.load('train_data/attributes.npy')
+        word_labels = np.load('data/train_data/word_labels.npy')
+        attributes = np.load('data/train_data/attributes.npy')
 
     return word_labels, attributes
 
@@ -150,7 +150,7 @@ def labels_ready():
     return label_list
 
 def word_embeding_get():
-    if not os.path.exists('train_data/semantic_features.npy'):
+    if not os.path.exists('data/train_data/semantic_features.npy'):
         word_featrue_file = open(path + 'class_wordembeddings.txt', 'r', encoding='utf-8')
         word_label_file = open(path + 'label_list.txt', 'r', encoding='utf-8')
         word_label_lines = word_label_file.readlines()
@@ -172,9 +172,9 @@ def word_embeding_get():
             one_semantic_feature = np.array(line[1:])
             num = label_num_dict[word_label_dict[class_entity]]
             semantic_features[num] = one_semantic_feature
-        np.save('train_data/semantic_features.npy',semantic_features)
+        np.save('data/train_data/semantic_features.npy',semantic_features)
     else:
-        semantic_features = np.load('train_data/semantic_features.npy')
+        semantic_features = np.load('data/train_data/semantic_features.npy')
 
     return semantic_features
 
