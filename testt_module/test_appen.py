@@ -1,7 +1,9 @@
-import torch
-import torch.nn as nn
-x = nn.Parameter(torch.Tensor(2,3))
-nn.init.uniform_(x, -0.001, 0.001)
-print(x)
-x = x.view(1, -1)
-print(x)
+
+import numpy as np
+vector1 = np.array([1, 2, 3])
+vector2 = np.array([4, 7, 5])
+
+op7 = np.dot(vector1, vector2) / (np.linalg.norm(vector1) * (np.linalg.norm(vector2)))
+print(op7)
+# 输出
+# 0.929669680201

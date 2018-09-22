@@ -1,10 +1,10 @@
 from Mymodels.DEM import DEM
 from Mymodels.DEM_Plus import DEM_Plus
 #import torch.optim as optim
-#from torch.utils.data import DataLoader
+#from torch.Utils.data import DataLoader
 import matplotlib.pyplot as plt
 #from SimpleClassfier.Claafier_Data_ready import ClassfierDataset
-from utils.prepare_data import *
+from Utils.prepare_data import *
 from SimpleClassfier.Classfier import *
 import time
 from Data_ready import *

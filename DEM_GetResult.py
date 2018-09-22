@@ -1,15 +1,12 @@
 from Data_ready import TestDataset
 from torch.utils.data import DataLoader
-from utils import *
+from Utils import *
 from Mymodels import DEM
 import torch
 import numpy as np
+from Utils.prepare_data import *
 
-# 训练文件目录，原文件结构无需改动
-test_path = '../Data/DatasetA_test_20180813/DatasetA_test/'
-result_file = open('result/submit_DEM.txt', 'a', encoding='utf-8')
-label_list = np.load('test_data/label_list.npy')
-images_name = np.load('test_data/images_name.npy')
+
 
 
 if __name__ == '__main__':
@@ -19,10 +16,11 @@ if __name__ == '__main__':
     semantic = torch.from_numpy(test_dataset.semantic_features).float().cuda()
     model = torch.load('models_file/DEM.pt')
     model.eval()
-
+    _, attribute = attribute_label()
+    attribute = torch.from_numpy(attribute).cuda()
     for idx, batch_data in enumerate(test_dataloader):
         image = batch_data['image'].float().cuda()
-        pre = model.predict(image, semantic)
+        pre = model.predict(image, semantic,attribute)
         image_name = images_name[idx]
         ready_to_write_label = label_list[pre[0]]
         result_file.write(image_name+'\t'+ready_to_write_label+'\n')

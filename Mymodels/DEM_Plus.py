@@ -9,46 +9,28 @@ class DEM_Plus(nn.Module):
         self.cnn = cnn
         for p in self.cnn.parameters():
             p.requires_grad = False
-        visual_dim = 32
+        visual_dim = 64
         self.word_emb_transformer = nn.Sequential(*[
             nn.Linear(semantic_dim, hidden_dim),
             nn.LeakyReLU(),
             nn.Linear(hidden_dim, visual_dim),
             nn.LeakyReLU()
         ])
-        self.MLP = nn.Sequential(*[
-            nn.Linear(2*visual_dim, visual_dim),
-            nn.Dropout(),
-            nn.LeakyReLU(),
-            nn.Linear(visual_dim, visual_dim//2),
-            nn.Dropout(),
-            nn.LeakyReLU(),
-            nn.Linear(visual_dim//2, visual_dim//2//2),
-            nn.Dropout(),
-            nn.LeakyReLU()
-        ])
-        self.out = nn.Sequential(*[
-            nn.Linear(visual_dim//2//2, 1),
-            nn.Sigmoid()
-        ])
 
-    def forward(self, image, label,word_embeddings):
+    def forward(self, image, label, word_embeddings):
         n_class = word_embeddings.size(0)
         batch_size = image.size(0)
 
         self.cnn.eval()
         visual_emb = self.cnn(image)
 
-        #visual_emb = visual_emb.repeat(1, n_class).view(batch_size * n_class, -1)
         semantic_emb = self.word_emb_transformer(word_embeddings[label])
-        concat = torch.cat([visual_emb, semantic_emb], -1)
-        x = self.MLP(concat)
-        x = self.out(x)
+        x = torch.cat([visual_emb, semantic_emb], -1)
         x = x.view(batch_size, -1)
         return x
 
     def get_loss(self, image, label, word_embeddings):
-        x = self.forward(image, label,word_embeddings)
+        x = self.forward(image, label, word_embeddings)
         loss = torch.sum(torch.abs(x-1))
         return loss
 

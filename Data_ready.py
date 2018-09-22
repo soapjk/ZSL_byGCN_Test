@@ -1,11 +1,11 @@
 from torch.utils.data import Dataset
-from utils.prepare_data import *
+from Utils.prepare_data import *
 
 class MyDataset(Dataset):
     def __init__(self):
         graph = graph_ready()
         semantic_features = word_embeding_get()
-        self.classfierweight = np.load('train_data/classfierweight.npy')
+        self.classfierweight = np.load('data/train_data/classfierweight.npy')
         self.semantic_features = semantic_features
         self.graph = graph
         #self.graph = np.eye(230,dtype=np.float32)
@@ -24,7 +24,7 @@ class MyDataset(Dataset):
 
 class TestDataset(Dataset):
     def __init__(self):
-        self.images = np.load('test_data/test_images.npy')
+        self.images = np.load('../Data/data/B/test_data/B_images.npy')
         self.images = np.transpose(self.images, (0, 3, 1, 2))
         semantic_features = word_embeding_get()
         self.semantic_features = semantic_features
@@ -57,9 +57,9 @@ class DEMPlusTrainDataset(Dataset):
 
 class DEMPlusEvalDataset(Dataset):
     def __init__(self):
-        images = np.load('data/eval_data/eval_image_list.npy')
+        images = np.load('../Data/data/eval_data/eval_image_list.npy')
         images = np.transpose(images, (0, 3, 1, 2))
-        labels = np.load('data/eval_data/eval_label_list.npy')
+        labels = np.load('../Data/data/eval_data/eval_label_list.npy')
         self.images = images
         self.labels = labels
 

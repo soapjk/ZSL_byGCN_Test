@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 from Data_ready import MyDataset,TestDataset
 from torch.utils.data import DataLoader
-from utils import *
+from Utils import *
 import matplotlib.pyplot as plt
 import torch
 import numpy as np

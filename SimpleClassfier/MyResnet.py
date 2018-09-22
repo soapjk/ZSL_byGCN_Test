@@ -8,11 +8,13 @@ import torch.nn as nn
 from Data_ready import MyDataset
 from torch.utils.data import DataLoader
 
+
 class MyResNet(nn.Module):
 
-    def __init__(self,):
-        layers = [2, 2, 2, 2]
-        block = resnet.BasicBlock
+    def __init__(self, size):
+        self.out_size = size
+        layers = [3, 4, 6, 3]
+        block = resnet.Bottleneck
         self.inplanes = 64
         super(MyResNet, self).__init__()
         self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3,
@@ -27,7 +29,7 @@ class MyResNet(nn.Module):
         self.avgpool = nn.AvgPool2d(2, stride=1)
         #self.avgpool = nn.AvgPool2d(7, stride=1)
 
-        self.fc = nn.Linear(512 * block.expansion, 32)
+        self.fc = nn.Linear(512 * block.expansion, size)
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
